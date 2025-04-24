@@ -1,0 +1,14 @@
+const express = require("express");
+const router = express.Router();
+const userController = require("../controllers/userController");
+
+// 🔹 POST: สมัครสมาชิก
+router.post("/register", userController.registerUser);
+
+// 🔹 POST: เข้าสู่ระบบ
+router.post("/login", userController.loginUser);
+
+// 🔹 PUT: แก้ไขข้อมูล
+router.put("/update/:id", userController.updateUser);
+
+module.exports = router;
