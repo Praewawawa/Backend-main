@@ -1,101 +1,5 @@
-/*const User = require("../models/User");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-
-// ✅ ฟังก์ชันสมัครสมาชิก
-async function registerUser(req, res) {
-  const { fullname, email, password, gender, phone } = req.body;
-
-  try {
-    // ตรวจสอบว่ามี email นี้แล้วหรือยัง
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: "Email นี้มีอยู่ในระบบแล้ว" });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const newUser = new User({
-      fullname,
-      email,
-      password: hashedPassword,
-      gender,
-      phone,
-    });
-
-    await newUser.save();
-
-    res.status(201).json({ message: "สมัครสมาชิกสำเร็จ" });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "เกิดข้อผิดพลาดในเซิร์ฟเวอร์" });
-  }
-}
-
-// ✅ ฟังก์ชันเข้าสู่ระบบ
-async function loginUser(req, res) {
-  const { email, password } = req.body;
-
-  try {
-    const user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ message: "ไม่พบบัญชีผู้ใช้" });
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch)
-      return res.status(401).json({ message: "รหัสผ่านไม่ถูกต้อง" });
-
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
-
-    res.json({
-      message: "เข้าสู่ระบบสำเร็จ",
-      token,
-      user: {
-        id: user._id,
-        fullname: user.fullname,
-        email: user.email,
-        gender: user.gender,
-        phone: user.phone,
-      },
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "เกิดข้อผิดพลาดในเซิร์ฟเวอร์" });
-  }
-}
-
-// ✅ ฟังก์ชันแก้ไขข้อมูลผู้ใช้
-async function updateUser(req, res) {
-  const { id } = req.params;
-  const { fullname, email, password, gender, phone } = req.body;
-
-  try {
-    const user = await User.findById(id);
-    if (!user) return res.status(404).json({ message: "ไม่พบบัญชีผู้ใช้" });
-
-    user.fullname = fullname || user.fullname;
-    user.email = email || user.email;
-    user.gender = gender || user.gender;
-    user.phone = phone || user.phone;
-
-    if (password) {
-      const hashedPassword = await bcrypt.hash(password, 10);
-      user.password = hashedPassword;
-    }
-
-    const updatedUser = await user.save();
-    res.json({ message: "อัปเดตข้อมูลสำเร็จ", user: updatedUser });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "เกิดข้อผิดพลาดในเซิร์ฟเวอร์" });
-  }
-}
-
-module.exports = { registerUser, loginUser, updateUser };*/
 const pool = require("../config/db");
 const bcrypt = require("bcryptjs");
-
 
 // ✅ ลงทะเบียนผู้ใช้ใหม่
 exports.registerUser = async (req, res) => {
@@ -119,7 +23,6 @@ exports.registerUser = async (req, res) => {
     res.status(500).json({ message: "เกิดข้อผิดพลาดในการลงทะเบียน" });
   }
 };
-
 
 // ✅ เข้าสู่ระบบ
 exports.loginUser = async (req, res) => {
@@ -150,7 +53,6 @@ exports.loginUser = async (req, res) => {
 };
 
 // ✅ แก้ไขข้อมูลผู้ใช้
-
 exports.updateUser = async (req, res) => {
   const { id } = req.params;
   const { name, email, phone, gender, password } = req.body;
@@ -194,5 +96,30 @@ exports.updateUser = async (req, res) => {
   } catch (error) {
     console.error("❌ UPDATE ERROR:", error);
     res.status(500).json({ message: "เกิดข้อผิดพลาดในการอัปเดตข้อมูล" });
+  }
+};
+
+// ✅ ดึงข้อมูลผู้ใช้ทั้งหมด
+exports.getAllUsers = async (req, res) => {
+  try {
+    const [users] = await pool.execute("SELECT id, name, email, phone, gender, created_at FROM users");
+    res.status(200).json(users);
+  } catch (error) {
+    console.error("❌ GET ALL USERS ERROR:", error);
+    res.status(500).json({ message: "ไม่สามารถดึงข้อมูลผู้ใช้ได้" });
+  }
+};
+
+// ✅ ดึงข้อมูลผู้ใช้ตาม ID
+exports.getUserById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const [rows] = await pool.execute("SELECT id, name, email, phone, gender, created_at FROM users WHERE id = ?", [id]);
+    if (rows.length === 0) return res.status(404).json({ message: "ไม่พบผู้ใช้นี้" });
+
+    res.status(200).json(rows[0]);
+  } catch (error) {
+    console.error("❌ GET USER BY ID ERROR:", error);
+    res.status(500).json({ message: "ไม่สามารถดึงข้อมูลผู้ใช้ได้" });
   }
 };
