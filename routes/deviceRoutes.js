@@ -5,6 +5,7 @@ const deviceController = require('../controllers/deviceController');
 
 
 
+router.post('/',deviceController.addDevice); // เพิ่มอุปกรณ์ใหม่
 
 // ✅ แก้ให้ตรงกับชื่อฟังก์ชันที่มีใน controller
 router.get('/', deviceController.getDevice); // ดึงข้อมูลอุปกรณ์เดียว

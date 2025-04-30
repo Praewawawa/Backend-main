@@ -78,6 +78,7 @@ exports.createOTP = async (req, res) => {
   }
 };
 
+
 // ✅ ฟังก์ชันยืนยัน OTP
 exports.verifyOTP = async (req, res) => {
   const { email, otp_code, purpose } = req.body;

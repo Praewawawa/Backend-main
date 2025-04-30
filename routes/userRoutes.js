@@ -11,4 +11,8 @@ router.post("/login", userController.loginUser);
 // 🔹 PUT: แก้ไขข้อมูล
 router.put("/update/:id", userController.updateUser);
 
+// เส้นดึงข้อมูลผู้ใช้ทั้งหมด
+router.get("/", userController.getAllUsers);
+// 🔹 GET: ดึงข้อมูลผู้ใช้ตาม ID
+
 module.exports = router;
