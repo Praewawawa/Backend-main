@@ -17,4 +17,8 @@ router.get("/", userController.getAllUsers);
 // 🔹 GET: ดึงข้อมูลผู้ใช้ตาม ID
 router.get("/:id", userController.getUserById);
 
+// 🔹 Resetpassword
+router.post("/reset-password", userController.resetPassword);
+
+
 module.exports = router;

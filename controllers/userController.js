@@ -123,3 +123,17 @@ exports.getUserById = async (req, res) => {
     res.status(500).json({ message: "ไม่สามารถดึงข้อมูลผู้ใช้ได้" });
   }
 };
+
+// รีเซ็ตรหัสผ่าน
+exports.resetPassword = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await pool.execute("UPDATE users SET password = ? WHERE email = ?", [hashedPassword, email]);
+    res.status(200).json({ message: "เปลี่ยนรหัสผ่านสำเร็จ" });
+  } catch (error) {
+    console.error("❌ RESET ERROR:", error);
+    res.status(500).json({ message: "เปลี่ยนรหัสผ่านไม่สำเร็จ" });
+  }
+};

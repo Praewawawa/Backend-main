@@ -71,6 +71,7 @@ exports.createOTP = async (req, res) => {
     }
 
     await sendEmail(email, otp);
+    success: true,
     res.json({ message: 'OTP ถูกส่งไปยังอีเมลเรียบร้อยแล้ว' });
   } catch (err) {
     console.error(err);
@@ -104,6 +105,7 @@ exports.verifyOTP = async (req, res) => {
     }
 
     await otpEntry.update({ is_verified: true });
+    success: true,
     res.status(200).json({ message: 'ยืนยัน OTP สำเร็จ' });
   } catch (error) {
     console.error(error);
