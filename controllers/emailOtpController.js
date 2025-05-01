@@ -125,4 +125,6 @@ exports.deleteExpiredOTPs = async () => {
   } catch (error) {
     console.error('❌ ลบ OTP หมดอายุไม่สำเร็จ:', error);
   }
+
+  
 };

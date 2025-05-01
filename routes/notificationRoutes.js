@@ -17,4 +17,8 @@ router.patch("/read/:id", notificationController.markAsRead);
 // DELETE /api/notifications/:id → ลบการแจ้งเตือน
 router.delete("/:id", notificationController.deleteNotification);
 
+router.get('/settings/:user_id', notificationController.getNotificationSettings);
+router.put('/settings/:user_id', notificationController.updateNotificationSettings);
+
+
 module.exports = router;
