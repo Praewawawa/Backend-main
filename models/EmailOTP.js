@@ -1,5 +1,5 @@
 // models/EmailOtp.js
-const { DataTypes } = require("sequelize");
+/*const { DataTypes } = require("sequelize");
 const sequelize = require("../config/sequelize"); // ต้อง export ตัว instance
 
 const EmailOtp = sequelize.define("email_otps", {
@@ -13,4 +13,38 @@ const EmailOtp = sequelize.define("email_otps", {
   timestamps: false,
 });
 
-module.exports = EmailOtp;
+module.exports = EmailOtp;*/
+
+module.exports = (sequelize, DataTypes) => {
+    const EmailOtp = sequelize.define("email_otps", {
+      // define attributes
+    email: { 
+        type: DataTypes.STRING, 
+        allowNull: false 
+    },
+    otp_code: { 
+        type: DataTypes.STRING, 
+        allowNull: false 
+    },
+    purpose: { 
+        type: DataTypes.STRING, 
+        allowNull: false 
+    },
+    is_verified: { 
+        type: DataTypes.BOOLEAN, 
+        defaultValue: false 
+    },
+    expired_at: { 
+        type: DataTypes.DATE 
+    },
+    created_at: { 
+        type: DataTypes.DATE, 
+        defaultValue: DataTypes.NOW 
+    },
+    }, {
+      tableName: 'email_otps',
+      timestamps: false,
+    });
+  
+    return EmailOtp;
+  };

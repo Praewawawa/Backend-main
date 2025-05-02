@@ -1,4 +1,4 @@
-const { DataTypes } = require("sequelize");
+/*const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
 
 const ControlMode = sequelize.define("ControlMode", {
@@ -11,4 +11,27 @@ const ControlMode = sequelize.define("ControlMode", {
   timestamps: false,
 });
 
-module.exports = ControlMode;
+module.exports = ControlMode;*/
+
+module.exports = (sequelize, DataTypes) => {
+  const ControlMode = sequelize.define("ControlMode", {
+    // define attributes
+    device_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    mode: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    last_changed: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+  }, {
+    tableName: 'control_modes',
+    timestamps: false,
+  });
+
+  return ControlMode;
+};

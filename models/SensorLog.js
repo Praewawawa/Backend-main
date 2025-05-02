@@ -1,4 +1,4 @@
-const { DataTypes } = require("sequelize");
+/*const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
 
 const SensorLog = sequelize.define("SensorLog", {
@@ -10,7 +10,25 @@ const SensorLog = sequelize.define("SensorLog", {
 }, {
   tableName: "sensor_logs",
   timestamps: false,
-});
+});*/
+
+module.exports = (sequelize, DataTypes) => {
+  const SensorLog = sequelize.define("sensor_logs", {
+    // define attributes
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    user_id: { type: DataTypes.INTEGER, allowNull: false },
+    title: { type: DataTypes.STRING },
+    subtitle: { type: DataTypes.TEXT },
+    icon: { type: DataTypes.STRING },
+    is_read: { type: DataTypes.BOOLEAN },
+    created_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+  }, {
+    tableName: 'sensor_logs',
+    timestamps: false,
+  });
+
+  return SensorLog;
+};
 
 const db = require("../config/db");
 
@@ -59,5 +77,5 @@ exports.deleteSensorLog = (req, res) => {
 };
 
 
-module.exports = SensorLog;
+
 

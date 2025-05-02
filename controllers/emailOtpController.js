@@ -1,4 +1,4 @@
-const EmailOtp = require('../models/EmailOtp');
+const EmailOtp = require('../models');
 const nodemailer = require('nodemailer');
 const { Op } = require('sequelize');
 const dotenv = require('dotenv');
