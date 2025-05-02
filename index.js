@@ -6,6 +6,9 @@ const os = require("os");
 const { deleteExpiredOTPs } = require("./controllers/emailOtpController");
 const pool = require("./config/db");
 const db = require("./models"); // ✅ ดึง Sequelize models ที่โหลดไว้ใน models/index.js
+const imageRoutes = require('./routes/imageRoutes');
+
+app.use('/api', imageRoutes);
 
 // ✅ โหลด .env ก่อนทำอย่างอื่น
 dotenv.config();

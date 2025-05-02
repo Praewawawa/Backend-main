@@ -16,35 +16,18 @@ const EmailOtp = sequelize.define("email_otps", {
 module.exports = EmailOtp;*/
 
 module.exports = (sequelize, DataTypes) => {
-    const EmailOtp = sequelize.define("email_otps", {
-      // define attributes
-    email: { 
-        type: DataTypes.STRING, 
-        allowNull: false 
-    },
-    otp_code: { 
-        type: DataTypes.STRING, 
-        allowNull: false 
-    },
-    purpose: { 
-        type: DataTypes.STRING, 
-        allowNull: false 
-    },
-    is_verified: { 
-        type: DataTypes.BOOLEAN, 
-        defaultValue: false 
-    },
-    expired_at: { 
-        type: DataTypes.DATE 
-    },
-    created_at: { 
-        type: DataTypes.DATE, 
-        defaultValue: DataTypes.NOW 
-    },
+    const EmailOtp = sequelize.define('EmailOtp', {
+      email: DataTypes.STRING,
+      otp_code: DataTypes.STRING,
+      purpose: DataTypes.STRING,
+      is_verified: DataTypes.BOOLEAN,
+      expired_at: DataTypes.DATE,
+      created_at: DataTypes.DATE
     }, {
       tableName: 'email_otps',
-      timestamps: false,
+      timestamps: false
     });
   
     return EmailOtp;
   };
+  

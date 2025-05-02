@@ -55,7 +55,7 @@ exports.loginUser = async (req, res) => {
 // ✅ แก้ไขข้อมูลผู้ใช้
 exports.updateUser = async (req, res) => {
   const { id } = req.params;
-  const { name, email, phone, gender, password } = req.body;
+  const { name, email, phone, gender, password, avatar_base64 } = req.body;
 
   try {
     const fields = [];
@@ -82,6 +82,10 @@ exports.updateUser = async (req, res) => {
       fields.push("password=?");
       values.push(hashedPassword);
     }
+    if (avatar_base64) {
+      fields.push("avatar_base64=?");
+      values.push(avatar_base64);
+    }
 
     if (fields.length === 0) {
       return res.status(400).json({ message: "กรุณาระบุข้อมูลที่ต้องการอัปเดต" });
@@ -98,6 +102,7 @@ exports.updateUser = async (req, res) => {
     res.status(500).json({ message: "เกิดข้อผิดพลาดในการอัปเดตข้อมูล" });
   }
 };
+
 
 // ✅ ดึงข้อมูลผู้ใช้ทั้งหมด
 exports.getAllUsers = async (req, res) => {

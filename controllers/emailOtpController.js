@@ -1,4 +1,6 @@
-const EmailOtp = require('../models');
+const db = require('../models'); // ✅ ดึง models ทั้งหมด
+const EmailOtp = db.EmailOtp;    // ✅ ใช้เฉพาะ Model email_otps
+
 const nodemailer = require('nodemailer');
 const { Op } = require('sequelize');
 const dotenv = require('dotenv');
@@ -46,10 +48,7 @@ exports.createOTP = async (req, res) => {
 
   try {
     const existing = await EmailOtp.findOne({
-      where: {
-        email,
-        purpose
-      }
+      where: { email, purpose }
     });
 
     if (existing) {
@@ -71,14 +70,17 @@ exports.createOTP = async (req, res) => {
     }
 
     await sendEmail(email, otp);
-    success: true,
-    res.json({ message: 'OTP ถูกส่งไปยังอีเมลเรียบร้อยแล้ว' });
+
+    res.json({
+      status: true,
+      message: "OTP ถูกส่งไปยังอีเมลเรียบร้อยแล้ว"
+    });
+
   } catch (err) {
-    console.error(err);
+    console.error("❌ CREATE OTP ERROR:", err);
     res.status(500).json({ message: 'เกิดข้อผิดพลาดในการส่ง OTP' });
   }
 };
-
 
 // ✅ ฟังก์ชันยืนยัน OTP
 exports.verifyOTP = async (req, res) => {
@@ -105,10 +107,10 @@ exports.verifyOTP = async (req, res) => {
     }
 
     await otpEntry.update({ is_verified: true });
-    success: true,
+
     res.status(200).json({ message: 'ยืนยัน OTP สำเร็จ' });
   } catch (error) {
-    console.error(error);
+    console.error("❌ VERIFY OTP ERROR:", error);
     res.status(500).json({ message: 'เกิดข้อผิดพลาดในการยืนยัน OTP' });
   }
 };
@@ -125,6 +127,4 @@ exports.deleteExpiredOTPs = async () => {
   } catch (error) {
     console.error('❌ ลบ OTP หมดอายุไม่สำเร็จ:', error);
   }
-
-  
 };

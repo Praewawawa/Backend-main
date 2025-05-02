@@ -8,7 +8,7 @@ const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.json')[env];
 
-const db = {}; // ✅ ประกาศตรงนี้แค่ครั้งเดียว
+const db = {}; // ✅ ประกาศก่อน
 
 let sequelize;
 if (config.use_env_variable) {
@@ -17,6 +17,7 @@ if (config.use_env_variable) {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 
+// ✅ โหลด models ทั้งหมดในโฟลเดอร์นี้
 fs
   .readdirSync(__dirname)
   .filter(file => {
@@ -32,12 +33,14 @@ fs
     db[model.name] = model;
   });
 
+// ✅ เชื่อม associations ถ้ามี
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
   }
 });
 
+// ✅ เพิ่ม Sequelize instance
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
