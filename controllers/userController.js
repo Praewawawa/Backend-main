@@ -1,5 +1,8 @@
 const pool = require("../config/db");
+const path = require("path");
 const bcrypt = require("bcryptjs");
+const fs = require("fs");
+
 
 // ✅ ลงทะเบียนผู้ใช้ใหม่
 exports.registerUser = async (req, res) => {
@@ -82,9 +85,18 @@ exports.updateUser = async (req, res) => {
       fields.push("password=?");
       values.push(hashedPassword);
     }
+
+    // ✅ หากมี avatar_base64 → แปลงเป็นไฟล์ภาพ
     if (avatar_base64) {
-      fields.push("avatar_base64=?");
-      values.push(avatar_base64);
+      const buffer = Buffer.from(avatar_base64, "base64");
+      const fileName = `user_${id}_${Date.now()}.png`;
+      const uploadPath = path.join(__dirname, "../uploads", fileName);
+
+      fs.writeFileSync(uploadPath, buffer);
+      const avatarUrl = `/uploads/${fileName}`;
+
+      fields.push("avatar_url=?");
+      values.push(avatarUrl);
     }
 
     if (fields.length === 0) {
@@ -102,6 +114,7 @@ exports.updateUser = async (req, res) => {
     res.status(500).json({ message: "เกิดข้อผิดพลาดในการอัปเดตข้อมูล" });
   }
 };
+
 
 
 // ✅ ดึงข้อมูลผู้ใช้ทั้งหมด
@@ -142,3 +155,5 @@ exports.resetPassword = async (req, res) => {
     res.status(500).json({ message: "เปลี่ยนรหัสผ่านไม่สำเร็จ" });
   }
 };
+
+
